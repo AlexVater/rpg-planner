@@ -102,6 +102,8 @@ export function GraphView({ notes, visibleTypes, selectedId, onNodeClick, onNew 
           nodeLabel={() => ''}
           onNodeClick={(n) => onNodeClick(n)}
           onNodeHover={(n) => setHoverId(n?.id ?? null)}
+          // Touch has no hover-out, so a tap on empty space clears the highlight.
+          onBackgroundClick={() => setHoverId(null)}
           linkColor={(l) =>
             isLit(endId(l.source)) && isLit(endId(l.target)) && (!focusId || endId(l.source) === focusId || endId(l.target) === focusId)
               ? GRAPH_COLORS.linkActive

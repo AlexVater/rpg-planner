@@ -8,6 +8,7 @@ import { Sidebar } from './components/Sidebar'
 import { GraphView } from './components/GraphView'
 import { NoteEditor } from './components/NoteEditor'
 import { ConfirmDialog } from './components/ConfirmDialog'
+import { ICONS, Icon } from './icons'
 
 export default function App() {
   const store = useCampaign()
@@ -15,6 +16,8 @@ export default function App() {
   const [visibleTypes, setVisibleTypes] = useState(() => new Set<NoteType>(NOTE_TYPE_KEYS))
   const [pendingImport, setPendingImport] = useState<{ file: string; campaign: Campaign } | null>(null)
   const [importError, setImportError] = useState<string | null>(null)
+  // Mobile only: which full-screen view sits under the note sheet.
+  const [mobileTab, setMobileTab] = useState<'notes' | 'graph'>('graph')
 
   if (!store.campaign)
     return (
@@ -46,7 +49,7 @@ export default function App() {
   }
 
   return (
-    <div className={`app${selected ? ' with-editor' : ''}`}>
+    <div className={`app tab-${mobileTab}${selected ? ' with-editor' : ''}`}>
       <Sidebar
         campaign={campaign}
         selectedId={selectedId}
@@ -83,6 +86,23 @@ export default function App() {
           onOpenTitle={openTitle}
         />
       )}
+      <nav className="mobile-nav" aria-label="Navegação">
+        <button aria-pressed={mobileTab === 'notes'} onClick={() => setMobileTab('notes')}>
+          <Icon d={ICONS.list} />
+          Notas
+        </button>
+        <button
+          className="mobile-new"
+          aria-label="Nova nota"
+          onClick={() => setSelectedId(store.addNote({ type: 'npc' }).id)}
+        >
+          <Icon d={ICONS.plus} />
+        </button>
+        <button aria-pressed={mobileTab === 'graph'} onClick={() => setMobileTab('graph')}>
+          <Icon d={ICONS.graph} />
+          Grafo
+        </button>
+      </nav>
       {pendingImport && (
         <ConfirmDialog
           title="Substituir a campanha?"
