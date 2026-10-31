@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "name": "A Sombra de Valmora",
+  "notes": [
+    {
+      "id": "n-valmora",
+      "title": "Valmora",
+      "type": "local",
+      "tags": ["cidade"],
+      "body": "Cidade portuária governada pelo [[Conselho das Marés]]. Ponto de partida da campanha.",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-taverna",
+      "title": "Taverna do Javali",
+      "type": "local",
+      "parentId": "n-valmora",
+      "tags": ["taverna"],
+      "body": "Taverna barulhenta no cais. Gerenciada por [[Gandar]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-quarto",
+      "title": "Quarto secreto",
+      "type": "local",
+      "parentId": "n-taverna",
+      "tags": [],
+      "body": "Atrás do barril de cerveja. Ali está guardada a [[Lâmina de Âmbar]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-gandar",
+      "title": "Gandar",
+      "type": "npc",
+      "tags": ["aliado"],
+      "body": "Ex-aventureiro, dono da [[Taverna do Javali]]. Deve um favor à [[Irmandade do Corvo]].\n\n**Segredo:** sabe onde está o [[Mapa do Abismo]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-irmandade",
+      "title": "Irmandade do Corvo",
+      "type": "faccao",
+      "tags": ["vilões"],
+      "body": "Guilda de ladrões que quer controlar [[Valmora]]. Procura a [[Lâmina de Âmbar]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-lamina",
+      "title": "Lâmina de Âmbar",
+      "type": "item-magico",
+      "tags": ["lendário"],
+      "body": "Espada que aprisiona uma alma. Ligada à [[Queda de Ilmar]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-queda",
+      "title": "Queda de Ilmar",
+      "type": "lore",
+      "tags": ["história"],
+      "body": "Há 300 anos o reino de Ilmar afundou no mar. Os sobreviventes fundaram [[Valmora]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    },
+    {
+      "id": "n-sessao1",
+      "title": "Sessão 1 — Chegada",
+      "type": "sessao",
+      "tags": [],
+      "body": "Os jogadores chegam a [[Valmora]] e conhecem [[Gandar]] na [[Taverna do Javali]].",
+      "createdAt": "2026-10-30T00:00:00.000Z",
+      "updatedAt": "2026-10-30T00:00:00.000Z"
+    }
+  ]
+}
