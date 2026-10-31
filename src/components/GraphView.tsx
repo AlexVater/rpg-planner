@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ForceGraph2D, { type ForceGraphMethods } from 'react-force-graph-2d'
 import type { GraphLink, GraphNode, Note, NoteType } from '../types'
-import { GHOST_COLOR, NOTE_TYPES } from '../noteTypes'
+import { GHOST_COLOR, GRAPH_COLORS, NOTE_TYPES } from '../noteTypes'
+import { ICONS, Icon } from '../icons'
 import { buildGraph } from '../lib/graph'
 
 // The force engine mutates nodes (x, y, vx…) and replaces link ends with node objects.
@@ -13,11 +14,12 @@ interface Props {
   visibleTypes: Set<NoteType>
   selectedId: string | null
   onNodeClick: (node: GraphNode) => void
+  onNew: () => void
 }
 
 const endId = (end: string | SimNode) => (typeof end === 'string' ? end : end.id)
 
-export function GraphView({ notes, visibleTypes, selectedId, onNodeClick }: Props) {
+export function GraphView({ notes, visibleTypes, selectedId, onNodeClick, onNew }: Props) {
   const wrap = useRef<HTMLDivElement>(null)
   const [size, setSize] = useState({ width: 0, height: 0 })
   const [hoverId, setHoverId] = useState<string | null>(null)
@@ -71,7 +73,19 @@ export function GraphView({ notes, visibleTypes, selectedId, onNodeClick }: Prop
 
   return (
     <div className="graph" ref={wrap}>
-      {notes.length === 0 && <p className="empty">Nenhuma nota ainda. Crie a primeira na barra lateral.</p>}
+      {notes.length === 0 && (
+        <div className="empty-state graph-empty">
+          <div className="sigil">
+            <Icon d={ICONS.lore} />
+          </div>
+          <h3>Nenhuma nota ainda</h3>
+          <p>Comece pelo vilão, ou pela taverna onde tudo começa.</p>
+          <button className="btn btn-primary btn-sm" onClick={onNew}>
+            <Icon d={ICONS.plus} />
+            Nova nota
+          </button>
+        </div>
+      )}
       {size.width > 0 && (
         <ForceGraph2D<SimNode, SimLink>
           ref={fg}
@@ -90,56 +104,108 @@ export function GraphView({ notes, visibleTypes, selectedId, onNodeClick }: Prop
           onNodeHover={(n) => setHoverId(n?.id ?? null)}
           linkColor={(l) =>
             isLit(endId(l.source)) && isLit(endId(l.target)) && (!focusId || endId(l.source) === focusId || endId(l.target) === focusId)
-              ? 'rgba(220,225,235,0.7)'
-              : 'rgba(140,150,165,0.18)'
+              ? GRAPH_COLORS.linkActive
+              : focusId
+                ? 'rgba(110,98,83,0.25)'
+                : GRAPH_COLORS.link
           }
           linkWidth={(l) => (l.kind === 'parent' ? 1.5 : 1)}
           linkLineDash={(l) => (l.kind === 'parent' ? [4, 3] : null)}
-          nodeCanvasObject={(node, ctx, scale) => {
-            const color = node.type === 'ghost' ? GHOST_COLOR : NOTE_TYPES[node.type].color
-            const lit = isLit(node.id)
-            const r = node.id === selectedId ? 7 : 5
-            ctx.globalAlpha = lit ? 1 : 0.2
-            ctx.beginPath()
-            ctx.arc(node.x!, node.y!, r, 0, 2 * Math.PI)
-            if (node.type === 'ghost') {
-              ctx.setLineDash([2, 2])
-              ctx.strokeStyle = color
-              ctx.lineWidth = 1.5
-              ctx.stroke()
-              ctx.setLineDash([])
-            } else {
-              ctx.fillStyle = color
-              ctx.fill()
-            }
-            if (node.id === selectedId) {
-              ctx.strokeStyle = '#fff'
-              ctx.lineWidth = 1.5
-              ctx.stroke()
-            }
-            if (scale > 0.9 || node.id === focusId) {
-              const fontSize = Math.max(11 / scale, 3)
-              ctx.font = `${fontSize}px system-ui, sans-serif`
-              ctx.textAlign = 'center'
-              ctx.textBaseline = 'top'
-              ctx.fillStyle = node.type === 'ghost' ? '#8a8f98' : '#dfe3ea'
-              ctx.fillText(node.title || 'Sem título', node.x!, node.y! + r + 2)
-            }
-            ctx.globalAlpha = 1
-          }}
+          nodeCanvasObject={(node, ctx, scale) =>
+            drawNode(node, ctx, scale, {
+              selected: node.id === selectedId,
+              active: !!focusId && isLit(node.id),
+              dimmed: !isLit(node.id),
+            })
+          }
           nodePointerAreaPaint={(node, color, ctx) => {
             ctx.fillStyle = color
             ctx.beginPath()
-            ctx.arc(node.x!, node.y!, 8, 0, 2 * Math.PI)
+            ctx.arc(node.x!, node.y!, 11, 0, 2 * Math.PI)
             ctx.fill()
           }}
         />
       )}
       <div className="legend">
-        <span><i className="line solid" /> link</span>
-        <span><i className="line dashed" /> sub-nota</span>
-        <span><i className="ghost-dot" /> nota não criada</span>
+        <span><i className="line solid" /> Link</span>
+        <span><i className="line dashed" /> Sub-nota</span>
+        <span><i className="ghost-dot" /> Ainda não criada</span>
       </div>
     </div>
   )
+}
+
+const paths = new Map<string, Path2D>()
+const path2d = (d: string) => {
+  if (!paths.has(d)) paths.set(d, new Path2D(d))
+  return paths.get(d)!
+}
+
+/** Grimório node: type-colored disc with its icon, gold ring when selected, dashed when ghost. */
+function drawNode(
+  node: SimNode,
+  ctx: CanvasRenderingContext2D,
+  scale: number,
+  state: { selected: boolean; active: boolean; dimmed: boolean },
+) {
+  const x = node.x!
+  const y = node.y!
+  const ghost = node.type === 'ghost'
+  const info = ghost ? null : NOTE_TYPES[node.type as NoteType]
+  const r = state.selected ? 10 : 7
+  ctx.save()
+  if (state.dimmed) ctx.globalAlpha = 0.18
+
+  ctx.beginPath()
+  ctx.arc(x, y, r, 0, 2 * Math.PI)
+  if (!info) {
+    ctx.fillStyle = GRAPH_COLORS.background
+    ctx.fill()
+    ctx.setLineDash([2.5, 2])
+    ctx.lineWidth = 1.25
+    ctx.strokeStyle = GHOST_COLOR
+    ctx.stroke()
+    ctx.setLineDash([])
+  } else {
+    ctx.fillStyle = info.color
+    ctx.fill()
+    if (state.selected) {
+      ctx.lineWidth = 2
+      ctx.strokeStyle = GRAPH_COLORS.inkStrong
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.arc(x, y, r + 3.5, 0, 2 * Math.PI)
+      ctx.lineWidth = 1
+      ctx.strokeStyle = GRAPH_COLORS.selected
+      ctx.stroke()
+    }
+    // Only draw the icon once it's big enough on screen to read.
+    if (r * scale >= 9) {
+      const k = (r * 1.25) / 12
+      ctx.save()
+      ctx.translate(x - 12 * k, y - 12 * k)
+      ctx.scale(k, k)
+      ctx.lineWidth = 2.2
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      ctx.strokeStyle = GRAPH_COLORS.onType
+      ctx.stroke(path2d(info.icon))
+      ctx.restore()
+    }
+  }
+
+  if (scale > 0.9 || state.selected || state.active) {
+    const title = node.title || 'Sem título'
+    const fontSize = Math.max(11 / scale, 2.5)
+    ctx.font = `${state.selected ? 700 : 400} ${fontSize}px "Roboto Condensed", "Arial Narrow", sans-serif`
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'top'
+    // Halo in the background color so titles stay readable over links.
+    ctx.lineWidth = 3 / scale
+    ctx.strokeStyle = GRAPH_COLORS.background
+    ctx.strokeText(title, x, y + r + 3)
+    ctx.fillStyle = ghost ? GHOST_COLOR : state.selected || state.active ? GRAPH_COLORS.inkStrong : GRAPH_COLORS.ink
+    ctx.fillText(title, x, y + r + 3)
+  }
+  ctx.restore()
 }

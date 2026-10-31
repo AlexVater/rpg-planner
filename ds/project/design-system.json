@@ -1,0 +1,14 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": { "v": 1, "at": "2026-10-30T12:00:00Z" },
+  "title": "Grimório",
+  "namespace": "Grimorio",
+  "libraries": [],
+  "sections": {},
+  "groups": [],
+  "assetGroups": {},
+  "blobs": {},
+  "docs": { "readme": "project/README.md", "sections": [] },
+  "lastChange": { "by": "Alexsander", "at": "2026-10-30T12:00:00Z", "via": "Claude Code", "note": "Primeira versão do Grimório para o RPG Planner." }
+}

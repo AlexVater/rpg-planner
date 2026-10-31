@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { NoteType } from './types'
+import type { Campaign, NoteType } from './types'
 import { NOTE_TYPE_KEYS } from './noteTypes'
 import { useCampaign } from './state/useCampaign'
 import { GHOST_PREFIX } from './lib/graph'
@@ -7,13 +7,22 @@ import { downloadCampaign, readCampaignFile } from './lib/storage'
 import { Sidebar } from './components/Sidebar'
 import { GraphView } from './components/GraphView'
 import { NoteEditor } from './components/NoteEditor'
+import { ConfirmDialog } from './components/ConfirmDialog'
 
 export default function App() {
   const store = useCampaign()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [visibleTypes, setVisibleTypes] = useState(() => new Set<NoteType>(NOTE_TYPE_KEYS))
+  const [pendingImport, setPendingImport] = useState<{ file: string; campaign: Campaign } | null>(null)
+  const [importError, setImportError] = useState<string | null>(null)
 
-  if (!store.campaign) return <div className="loading">Carregando…</div>
+  if (!store.campaign)
+    return (
+      <div className="loading">
+        <div className="spinner" />
+        <p>Abrindo o grimório…</p>
+      </div>
+    )
   const { campaign } = store
   const selected = campaign.notes.find((n) => n.id === selectedId) ?? null
 
@@ -28,13 +37,11 @@ export default function App() {
   const openTitle = (title: string) => setSelectedId(store.resolveOrCreate(title).id)
 
   const importFile = async (file: File) => {
+    setImportError(null)
     try {
-      const imported = await readCampaignFile(file)
-      if (!confirm(`Substituir a campanha atual por "${imported.name}" (${imported.notes.length} notas)?`)) return
-      store.load(imported)
-      setSelectedId(null)
+      setPendingImport({ file: file.name, campaign: await readCampaignFile(file) })
     } catch (e) {
-      alert(`Não foi possível importar: ${(e as Error).message}`)
+      setImportError((e as Error).message)
     }
   }
 
@@ -44,6 +51,7 @@ export default function App() {
         campaign={campaign}
         selectedId={selectedId}
         visibleTypes={visibleTypes}
+        importError={importError}
         onToggleType={toggleType}
         onSelect={setSelectedId}
         onNew={() => setSelectedId(store.addNote({ type: 'npc' }).id)}
@@ -58,6 +66,7 @@ export default function App() {
         onNodeClick={(node) =>
           node.id.startsWith(GHOST_PREFIX) ? openTitle(node.title) : setSelectedId(node.id)
         }
+        onNew={() => setSelectedId(store.addNote({ type: 'npc' }).id)}
       />
       {selected && (
         <NoteEditor
@@ -73,6 +82,22 @@ export default function App() {
           onOpen={setSelectedId}
           onOpenTitle={openTitle}
         />
+      )}
+      {pendingImport && (
+        <ConfirmDialog
+          title="Substituir a campanha?"
+          confirmLabel="Importar e substituir"
+          onCancel={() => setPendingImport(null)}
+          onConfirm={() => {
+            store.load(pendingImport.campaign)
+            setSelectedId(null)
+            setPendingImport(null)
+          }}
+        >
+          Importar <strong>{pendingImport.file}</strong> (“{pendingImport.campaign.name}”,{' '}
+          {pendingImport.campaign.notes.length} notas) vai substituir a campanha atual ({campaign.notes.length}{' '}
+          notas). Exporte antes se quiser guardar uma cópia.
+        </ConfirmDialog>
       )}
     </div>
   )

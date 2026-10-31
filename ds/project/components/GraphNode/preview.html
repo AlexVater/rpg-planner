@@ -1,0 +1,31 @@
+<!-- @dsCard group="Grafo" height=330 subtitle="Nós e linhas desenhados no canvas." -->
+<div class="gr-root" style="padding:16px;min-height:100%;">
+<canvas id="g" width="760" height="260" style="width:100%;max-width:760px;height:auto;display:block;border-radius:3px"></canvas>
+<div class="gr-legend" style="margin-top:10px"><span><i></i>Link</span><span><i class="is-dashed"></i>Sub-nota</span><span><b></b>Ainda não criada</span><span><b style="border:2px solid var(--ink-100);background:var(--type-npc)"></b>Selecionada</span></div>
+<script>
+(function(){
+  var c=document.getElementById('g'),d=window.devicePixelRatio||1,W=760,H=260;
+  c.width=W*d;c.height=H*d;var x=c.getContext('2d');x.scale(d,d);
+  var G=Grimorio.graph;x.fillStyle=G.background;x.fillRect(0,0,W,H);
+  var S=2.2;x.save();x.scale(S,S);
+  var N={
+    vila:{x:60,y:30,type:'local',title:'Vila de Brumária'},
+    tav:{x:120,y:55,type:'local',title:'Taverna do Javali'},
+    orla:{x:185,y:30,type:'npc',title:'Orla'},
+    ordem:{x:235,y:75,type:'faccao',title:'Ordem da Lanterna'},
+    lam:{x:300,y:35,type:'item',title:'Lâmina Lunar'},
+    inc:{x:40,y:85,type:'lore',title:'O incêndio'},
+    ses:{x:170,y:95,type:'sessao',title:'Sessão 07'},
+    tob:{x:320,y:95,type:'outro',title:'Velho Tobias',ghost:true}
+  };
+  var L=[['vila','tav','child'],['vila','inc','child'],['tav','orla'],['tav','ordem'],['orla','lam'],['ordem','lam'],['ses','tav'],['ordem','tob'],['ses','orla']];
+  var hover={tav:1,vila:1,orla:1,ordem:1,ses:1};
+  L.forEach(function(l){var a=N[l[0]],b=N[l[1]];var on=(l[0]=='tav'||l[1]=='tav');
+    x.save();x.globalAlpha=on?1:G.dimAlpha;x.strokeStyle=on?G.linkActive:G.link;x.lineWidth=(on?1.4:1)/S*1.4;
+    x.setLineDash(l[2]=='child'?[3/S*2,3/S*2]:[]);x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();x.restore();});
+  Object.keys(N).forEach(function(k){Grimorio.drawNode(N[k],x,S,{selected:k=='tav',active:!!hover[k],dimmed:!hover[k]});});
+  x.restore();
+})();
+</script>
+</div>
+<script>Grimorio.renderIcons();</script>

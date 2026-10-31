@@ -1,0 +1,247 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap");
+
+/* Grimório — componentes em CSS puro. Tudo lê os tokens de tokens.css. */
+
+.gr-root {
+  background: var(--bg-100);
+  color: var(--ink-100);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+.gr-root *, .gr-root *::before, .gr-root *::after { box-sizing: border-box; }
+
+:where(.gr-root) :focus-visible {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 2px;
+}
+
+.gr-icon { width: 1em; height: 1em; flex: none; display: inline-block; vertical-align: -0.125em; }
+
+/* ---------- Button ---------- */
+.gr-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  min-height: 36px; padding: 0 var(--space-4);
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  font-family: var(--font-label); font-weight: 700; font-size: 14px; letter-spacing: 0.04em;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: background-color .12s, border-color .12s, color .12s;
+}
+.gr-btn--primary { background: var(--crimson-500); color: var(--on-crimson); }
+.gr-btn--primary:hover { background: var(--crimson-600); }
+.gr-btn--secondary { background: transparent; color: var(--ink-100); border-color: var(--line-200); }
+.gr-btn--secondary:hover { background: var(--bg-400); border-color: var(--line-300); }
+.gr-btn--ghost { background: transparent; color: var(--ink-200); }
+.gr-btn--ghost:hover { background: var(--bg-400); color: var(--ink-100); }
+.gr-btn--danger { background: transparent; color: var(--crimson-400); border-color: var(--crimson-400); }
+.gr-btn--danger:hover { background: var(--crimson-500); border-color: var(--crimson-500); color: var(--on-crimson); }
+.gr-btn--block { width: 100%; }
+.gr-btn--sm { min-height: 28px; padding: 0 var(--space-3); font-size: 13px; }
+.gr-btn:disabled { opacity: .45; cursor: not-allowed; }
+.gr-icon-btn {
+  width: 32px; height: 32px; padding: 0; display: inline-grid; place-items: center;
+  border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--ink-200);
+  font-size: 18px; cursor: pointer;
+}
+.gr-icon-btn:hover { background: var(--bg-400); color: var(--ink-100); }
+
+/* ---------- Heading (versalete carmesim com filete) ---------- */
+.gr-heading {
+  display: flex; align-items: center; gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-label); font-weight: 700; font-size: 12px; line-height: 16px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--crimson-400);
+}
+.gr-heading::after { content: ""; flex: 1; height: 1px; background: var(--line-100); }
+.gr-heading .gr-count { color: var(--ink-300); font-weight: 400; letter-spacing: 0; }
+
+/* ---------- Fields ---------- */
+.gr-label { display: block; margin-bottom: var(--space-1); font-family: var(--font-label); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-200); }
+.gr-input, .gr-select, .gr-textarea {
+  width: 100%; min-height: 36px; padding: 0 var(--space-3);
+  background: var(--bg-300); color: var(--ink-100);
+  border: 1px solid var(--line-300); border-radius: var(--radius-sm);
+  font: inherit;
+}
+.gr-input::placeholder, .gr-textarea::placeholder { color: var(--ink-300); }
+.gr-input:focus, .gr-select:focus, .gr-textarea:focus { outline: none; border-color: var(--gold-400); box-shadow: 0 0 0 1px var(--gold-400); }
+.gr-select { appearance: none; padding-right: 32px;
+  background-image: linear-gradient(45deg, transparent 50%, #c4baab 50%), linear-gradient(135deg, #c4baab 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+.gr-textarea { min-height: 220px; padding: var(--space-3); font-size: 14px; line-height: 22px; resize: vertical; }
+.gr-search { position: relative; }
+.gr-search .gr-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-300); font-size: 16px; }
+.gr-search .gr-input { padding-left: 34px; }
+
+/* ---------- Type chip (filtro) ---------- */
+.gr-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.gr-chip {
+  --c: var(--type-outro);
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 10px 0 6px;
+  border-radius: var(--radius-pill); border: 1px solid var(--line-200);
+  background: transparent; color: var(--ink-300);
+  font-family: var(--font-label); font-weight: 700; font-size: 12px; letter-spacing: .04em;
+  cursor: pointer;
+}
+.gr-chip .gr-chip-mark {
+  width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+  border: 1.5px solid var(--c); color: var(--c); font-size: 11px;
+}
+.gr-chip[aria-pressed="true"] { color: var(--ink-100); border-color: var(--c); background: var(--bg-300); }
+.gr-chip[aria-pressed="true"] .gr-chip-mark { background: var(--c); color: var(--on-type); }
+.gr-chip:hover { border-color: var(--c); }
+.gr-chip .gr-count { color: var(--ink-300); font-weight: 400; }
+
+/* ---------- Note tree ---------- */
+.gr-tree, .gr-tree ul { list-style: none; margin: 0; padding: 0; }
+.gr-tree ul { margin-left: 15px; padding-left: var(--space-2); border-left: 1px solid var(--line-100); }
+.gr-tree-item {
+  --c: var(--type-outro);
+  position: relative; display: flex; align-items: center; gap: var(--space-2);
+  width: 100%; min-height: 32px; padding: 6px var(--space-2);
+  border: 0; border-radius: var(--radius-sm); background: transparent;
+  color: var(--ink-200); font: inherit; text-align: left; cursor: pointer;
+}
+.gr-tree-item:hover { background: var(--bg-400); color: var(--ink-100); }
+.gr-tree-item .gr-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex: none; }
+.gr-tree-item .gr-tree-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gr-tree-item .gr-tree-meta { color: var(--ink-300); font-size: 12px; }
+.gr-tree-item.is-selected { background: var(--bg-300); color: var(--ink-100); font-weight: 500; }
+.gr-tree-item.is-selected::before {
+  content: ""; position: absolute; left: -1px; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: var(--c);
+}
+.gr-tree-toggle { width: 14px; color: var(--ink-300); font-size: 10px; flex: none; text-align: center; }
+mark.gr-hit { background: transparent; color: var(--gold-400); font-weight: 500; }
+
+/* ---------- Tags ---------- */
+.gr-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gr-tag {
+  display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 4px 0 10px;
+  border-radius: var(--radius-pill); background: var(--bg-300); border: 1px solid var(--line-100);
+  color: var(--ink-200); font-size: 12px;
+}
+.gr-tag::before { content: "#"; color: var(--ink-300); margin-right: -2px; }
+.gr-tag button { width: 18px; height: 18px; border: 0; border-radius: 50%; background: transparent; color: var(--ink-300); cursor: pointer; font-size: 13px; line-height: 1; }
+.gr-tag button:hover { background: var(--bg-400); color: var(--ink-100); }
+.gr-tag-add {
+  height: 24px; width: 84px; padding: 0 10px; border-radius: var(--radius-pill);
+  border: 1px dashed var(--line-200); background: transparent; color: var(--ink-100); font: inherit; font-size: 12px;
+}
+.gr-tag-add::placeholder { color: var(--ink-300); }
+.gr-tag-add:focus { outline: none; border-style: solid; border-color: var(--gold-400); width: 140px; }
+
+/* ---------- Segmented (Editar / Visualizar) ---------- */
+.gr-seg { display: inline-flex; padding: 2px; border-radius: var(--radius-sm); background: var(--bg-300); border: 1px solid var(--line-100); }
+.gr-seg button {
+  height: 28px; padding: 0 var(--space-3); border: 0; border-radius: 2px; background: transparent; color: var(--ink-300);
+  font-family: var(--font-label); font-weight: 700; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+}
+.gr-seg button[aria-pressed="true"] { background: var(--bg-100); color: var(--ink-100); box-shadow: inset 0 -2px 0 var(--crimson-500); }
+
+/* ---------- Note panel ---------- */
+.gr-panel {
+  --c: var(--type-outro);
+  position: relative; display: flex; flex-direction: column; gap: var(--space-6);
+  padding: var(--space-4) var(--space-4) var(--space-6) calc(var(--space-4) + 3px);
+  background: var(--bg-200); border-left: 1px solid var(--line-100);
+}
+.gr-panel::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--c); }
+.gr-panel-head { display: flex; align-items: flex-start; gap: var(--space-3); }
+.gr-type-badge {
+  width: 40px; height: 40px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  background: var(--c); color: var(--on-type); font-size: 20px;
+  box-shadow: 0 0 0 3px var(--bg-200), 0 0 0 4px var(--c);
+}
+.gr-title-input {
+  flex: 1; min-width: 0; margin: 0; padding: 2px 4px; border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: transparent; color: var(--ink-100);
+  font-family: var(--font-display); font-weight: 600; font-size: 26px; line-height: 32px;
+}
+.gr-title-input:hover { border-color: var(--line-100); }
+.gr-title-input:focus { outline: none; border-color: var(--gold-400); background: var(--bg-300); }
+.gr-panel-kicker { margin: 2px 0 0 4px; font-family: var(--font-label); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-300); }
+.gr-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.gr-panel-foot { margin-top: auto; padding-top: var(--space-4); border-top: 1px solid var(--line-100); display: flex; justify-content: space-between; align-items: center; color: var(--ink-300); font-size: 12px; }
+.gr-hint { color: var(--ink-300); font-size: 12px; }
+.gr-hint code { color: var(--ink-200); font-family: inherit; background: var(--bg-300); padding: 1px 4px; border-radius: 2px; }
+.gr-refs { display: flex; flex-direction: column; gap: 2px; }
+
+/* ---------- Alert ---------- */
+.gr-alert {
+  display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); background: var(--bg-300); border: 1px solid var(--line-200);
+  color: var(--ink-200); font-size: 13px;
+}
+.gr-alert .gr-icon { margin-top: 2px; color: var(--gold-400); }
+.gr-alert--danger { border-color: var(--crimson-400); }
+.gr-alert--danger .gr-icon { color: var(--crimson-400); }
+.gr-alert strong { color: var(--ink-100); font-weight: 500; }
+
+/* ---------- Reading page (pergaminho) ---------- */
+.gr-page {
+  padding: var(--space-8) var(--space-6);
+  background: var(--parchment-100); color: var(--parchment-ink);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-page);
+  font-family: var(--font-read); font-size: 17px; line-height: 28px;
+}
+.gr-page > :first-child { margin-top: 0; }
+.gr-page p { margin: 0 0 14px; }
+.gr-page p.gr-lead { font-size: 19px; line-height: 30px; font-style: italic; }
+.gr-page .gr-dropcap::first-letter {
+  float: left; margin: 4px 8px 0 0; font-family: var(--font-display); font-weight: 700;
+  font-size: 54px; line-height: 44px; color: var(--parchment-link);
+}
+.gr-page h2 {
+  margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--parchment-rule);
+  font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 24px; color: var(--parchment-link);
+}
+.gr-page h3 { margin: 18px 0 4px; font-family: var(--font-label); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--parchment-ink); }
+.gr-page ul { margin: 0 0 14px; padding-left: 22px; }
+.gr-page blockquote {
+  margin: 0 0 14px; padding: 12px 16px; background: var(--parchment-200);
+  border-top: 2px solid var(--parchment-rule); border-bottom: 2px solid var(--parchment-rule);
+  font-style: italic;
+}
+.gr-page hr { border: 0; height: 1px; margin: 20px 15%; background: var(--parchment-rule); }
+.gr-wikilink {
+  color: var(--parchment-link); font-weight: 600; text-decoration: none;
+  border-bottom: 1px solid currentColor; cursor: pointer;
+}
+.gr-wikilink:hover { background: var(--parchment-200); }
+.gr-wikilink--missing { font-weight: 400; color: var(--parchment-muted); border-bottom: 1px dashed currentColor; }
+.gr-page-empty { color: var(--parchment-muted); font-style: italic; text-align: center; padding: var(--space-6) 0; }
+
+/* ---------- Dialog ---------- */
+.gr-scrim { position: absolute; inset: 0; background: rgba(13,12,11,.72); display: grid; place-items: center; padding: var(--space-4); }
+.gr-dialog {
+  width: min(420px, 100%); padding: var(--space-6); background: var(--bg-200);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-panel);
+  border-top: 3px solid var(--crimson-500);
+}
+.gr-dialog h2 { margin: 0 0 var(--space-2); font-family: var(--font-display); font-weight: 600; font-size: 20px; line-height: 26px; }
+.gr-dialog p { margin: 0 0 var(--space-6); color: var(--ink-200); }
+.gr-dialog-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+
+/* ---------- Empty / loading states ---------- */
+.gr-empty { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-8) var(--space-4); text-align: center; color: var(--ink-300); }
+.gr-empty .gr-empty-sigil { width: 56px; height: 56px; border-radius: 50%; border: 1.5px dashed var(--line-200); display: grid; place-items: center; font-size: 24px; color: var(--ink-300); margin-bottom: var(--space-2); }
+.gr-empty h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 18px; color: var(--ink-100); }
+.gr-empty p { margin: 0 0 var(--space-2); max-width: 280px; }
+.gr-spinner { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--line-100); border-top-color: var(--crimson-500); animation: gr-spin .9s linear infinite; }
+@keyframes gr-spin { to { transform: rotate(360deg); } }
+.gr-skeleton { height: 12px; border-radius: 2px; background: linear-gradient(90deg, var(--bg-300), var(--bg-400), var(--bg-300)); background-size: 200% 100%; animation: gr-shimmer 1.4s ease infinite; }
+@keyframes gr-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .gr-spinner, .gr-skeleton { animation: none; } }
+
+/* ---------- Graph legend ---------- */
+.gr-legend {
+  display: inline-grid; grid-template-columns: auto auto; gap: 4px 14px; padding: var(--space-2) var(--space-3);
+  background: rgba(20,18,16,.88); border: 1px solid var(--line-100); border-radius: var(--radius-sm);
+  font-size: 12px; color: var(--ink-200);
+}
+.gr-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.gr-legend i { width: 18px; height: 0; border-top: 1.5px solid var(--line-200); }
+.gr-legend i.is-dashed { border-top-style: dashed; }
+.gr-legend b { width: 10px; height: 10px; border-radius: 50%; border: 1.5px dashed var(--type-outro); }

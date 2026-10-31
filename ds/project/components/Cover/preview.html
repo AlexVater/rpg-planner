@@ -1,0 +1,38 @@
+<!-- @dsCard height=288 -->
+<style>
+  html, body { margin: 0; }
+  .cv { position: relative; width: 960px; height: 288px; background: var(--bg-100); overflow: hidden; }
+  .cv svg { position: absolute; inset: 0; }
+  .parch { fill: var(--parchment-100); }
+  .crim { fill: var(--crimson-500); }
+  .gold { fill: var(--gold-400); }
+  .loc { fill: var(--type-local); }
+  .rule { stroke: var(--parchment-rule); stroke-width: 1; }
+  .rule-red { stroke: var(--crimson-500); stroke-width: 2; }
+  .tile { rx: var(--radius-sm); }
+  .cv-text { position: absolute; left: 48px; bottom: 44px; max-width: 420px; }
+  .cv-name { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: 72px; line-height: .95; color: var(--ink-100); letter-spacing: .01em; }
+  .cv-tag { margin: 16px 0 0; font-family: var(--font-ui); font-size: 14px; line-height: 20px; color: var(--ink-300); }
+</style>
+<div class="cv">
+  <!--
+    blocks: parchment-100 tall slab 192×288 (bleeds top/bottom), crimson-500 200×168, gold-400 104×120, type-local 96×120
+    arrangement: one tall page-slab with a flush modular stack to its right, bleeding off the right edge
+    pattern: editorial row — "livro, não jogo", serif titles, filetes not shadows → a double rule and one rule on the page, one crimson rule
+    scales: blocks on space-8 (32px) multiples where possible; corners radius-sm (3px)
+  -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="parch" x="560" y="0" width="192" height="288"/>
+    <line class="rule" x1="584" y1="96" x2="728" y2="96"/>
+    <line class="rule" x1="584" y1="100" x2="728" y2="100"/>
+    <line class="rule" x1="584" y1="196" x2="728" y2="196"/>
+    <line class="rule-red" x1="584" y1="236" x2="648" y2="236"/>
+    <rect class="crim" x="760" y="0" width="200" height="160"/>
+    <rect class="gold tile" x="760" y="168" width="104" height="120"/>
+    <rect class="loc tile" x="872" y="168" width="96" height="120"/>
+  </svg>
+  <div class="cv-text">
+    <h1 class="cv-name">Grimório</h1>
+    <p class="cv-tag">O caderno do mestre: notas que se ligam, um grafo da campanha e uma página para ler.</p>
+  </div>
+</div>
